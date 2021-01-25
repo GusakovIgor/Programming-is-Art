@@ -1,0 +1,5 @@
+Run: ProgArt
+	ProgArt.exe
+
+ProgArt: ProgArt.cpp
+	g++ ProgArt.cpp -o ProgArt

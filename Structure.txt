@@ -1,0 +1,25 @@
+// Structure
+int Main ()
+{
+	Activating Raw Mode
+	
+	Reading symbols while we don't type 'q' and printing ASCII code of each one (and also printing symbols for not control characters) but if we don't type something for 0.1 second it prints 0 (that's because of terminal settings)
+
+	Disactivating Raw Mode
+	Exits Normally
+}
+
+
+void ActivateRawMode ()
+{
+	downloading trerminal (2*) attributes in structure, modifying it by hand and writing them back
+}
+
+void DisactivateRawMode ()
+{
+	writing standart treminal attributes back (standart attributes is !!global variable!!)
+}
+
+
+
+//-----------------

@@ -1,0 +1,105 @@
+/1/ <unistd.h>:
+
+- read (int filedescriptor, void *buf, size_t numbyte) from unistd.h, returning number of read bytes
+
+//-----------------
+
+
+/2/ <termios.h> (library for working with terminal):
+
+- struct termios is structure, that contains current attributes of terminal
+	.c_lflag is field for local flags
+	.c_iflag -------------input------
+	.c_oflag--------------output-----
+	.c_cflag--------------control----
+
+- tcgetattr() is function for reading current attributres into a struct
+
+- tcsetattr() is function for wrinting new terminal attributes back
+	TCSAFLUSH argument specifies when to apply the change: in this case, it waits for all pending
+	output to be written to the terminal, and also discards any input that hasn’t been read.
+
+- ECHO flag allow us to turn off/on echo. So if it turned off we won't see what we are entering
+
+- ICANON flag allow us to turn on/off canonical mode. So if it turned off we will be reading input
+	byte-by-byte, instead of line-by-line.
+
+- ISIG flag allow us to turn off/on CTRL-C and CTRL-Z signals (they are terminating or suspending
+	processes)
+
+- IEXTEN flag allow us to turn off/on CTRL-V signal (and CTRL_O on macOS). On some systems, when you
+	type Ctrl-V, the terminal waits for you to type another character and then sends that character
+	literally. For example, before we disabled Ctrl-C, you might’ve been able to type Ctrl-V and then
+	Ctrl-C to input a 3 byte.
+
+- IXON flag allow us to turn off/on CTRL-S and CTRL-Q signals (Ctrl-S stops data from being
+	transmitted to the terminal until you press Ctrl-Q) This originates in the days when you might
+	want to pause the transmission of data to let a device like a printer catch up
+
+- ICRNL flag allow us to turn off/on CTRL-M feature. If you'll print CTRL-M and see it's code, that
+	will be 10. It turns out that the terminal is helpfully translating any carriage returns 	
+	(13, '\r') inputted by the user into newlines (10, '\n'). CR - carriage return, NL - new line.
+
+- OPOST flag allow us to turn off/on output post-processing. It turns out, that the terminal does a
+	similar translation on the output side. It translates each newline ("\n") we print into a carriage
+	return followed by a newline ("\r\n"). POST stands for post-processing. After turning its off, you
+	should write \r\n, not only
+
+- BRKINT, INPCK, ISTRIP, and CS8 flags are not very usefull
+	- When BRKINT is turned on, a break condition will cause a SIGINT signal to be sent to the program,
+	like pressing Ctrl-C.
+
+	- INPCK enables parity checking, which doesn’t seem to apply to modern terminal emulators.
+
+	- ISTRIP causes the 8th bit of each input byte to be stripped, meaning it will set it to 0. This is
+	probably already turned off.
+	
+	- CS8 is not a flag, it is a bit mask with multiple bits, which we set using the bitwise-OR (|)
+	operator unlike all the flags we are turning off. It sets the character size (CS) to 8 bits per
+	byte. On my system, it’s already set that way.
+
+- The VMIN value sets the minimum number of bytes of input needed before read() can return
+
+- The VTIME value sets the maximum amount of time to wait before read() returns. It is in tenths of a
+	second.
+//-----------------
+
+
+/3/ <stdlib.h>
+
+- atexit (DisableRawMode). We use to register our disableRawMode() function to be called
+	automatically when the program exits normally, whether it exits by returning from main(), or by
+	calling the exit() function.
+
+- exit (). We use to exit the programm with 0 exit status (which indicates that everything is ok) or
+	non-zero exit status (that indicates failure)
+
+//-----------------
+
+
+/4/ <stdio.h>
+
+- perror () is function that check global errno variable and prints descriptive error message for it 
+	(and also it prints number of string, the code next to which caused error)
+
+//-----------------
+
+
+/5/ <ctype.h>
+
+- iscntrl (c) shows us whether character c is control character. Control charactares are nonprintable
+	characters with ASCII codes 0-31 and 127 (for example: backspace, delete, esc, ctrl-letter
+	combinations...)
+
+//-----------------
+
+
+/6/ <errno.h>
+
+- errno is global variable, that changes by function in which the error occured
+
+- EAGAIN is possible value of errno. In Cygwin, when read() times out it returns -1 with an errno of
+	EAGAIN, instead of just returning 0 like it’s supposed to. To make it work in Cygwin, we won’t
+	treat EAGAIN as an error.
+
+//-----------------
