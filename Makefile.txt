@@ -1,5 +1,5 @@
 Run: ProgArt
-	ProgArt.exe
+	./ProgArt Input.txt
 
 ProgArt: ProgArt.cpp
-	g++ ProgArt.cpp -o ProgArt
+	gcc -w ProgArt.cpp -o ProgArt

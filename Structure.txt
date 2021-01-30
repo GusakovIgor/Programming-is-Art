@@ -1,18 +1,71 @@
-// Structure
+/=== Structure ===/
+
+
 int Main ()
 {
 	Activating Raw Mode
 	
-	Reading symbols while we don't type 'q' and printing ASCII code of each one (and also printing symbols for not control characters) but if we don't type something for 0.1 second it prints 0 (that's because of terminal settings)
+	Refreshing Screen
 
-	Disactivating Raw Mode
+	Processing Keypressing while there is no quit command
+
+	Disactivating Raw Mode (because of atexit () function)
 	Exits Normally
 }
 
 
+
+
+/*** Input ***/
+
+void EditorProcessingKeypress ()
+{
+	It takes input from EditorReadKey (), and matches it to editor functions.
+}
+
+//-----------------
+
+
+
+/*** Output ***/
+
+void EditorDrawRaws ()
+{
+	Drawing '~' on the left side of screen.
+}
+
+void EditorRefreshScreen ()
+{
+	It clears entire screen writing an escape sequence in stdout.
+	Also puts the cursor to the top left corner of the screen and puts '~' on the left side of screen.
+}
+//-----------------
+
+
+
+/*** Initialize ***/
+
+void initEditor ()
+{
+	Initialising all fields in State struct (calculating window size for now).
+}
+
+//-----------------
+
+
+
+/*** Working with terminal ***/
+
+char EditorReadKey ()
+{
+	Reads something. If there was a error - going in while (), if there was no input for 0.1 second - going in while (). 
+	If we founds error in while (), we Surrender ().
+}
+
 void ActivateRawMode ()
 {
-	downloading trerminal (2*) attributes in structure, modifying it by hand and writing them back
+	downloading trerminal (2*) attributes in structure, modifying it by hand and writing them back and saying that at any exit
+	we sholud back everything the way it was.
 }
 
 void DisactivateRawMode ()
@@ -20,6 +73,20 @@ void DisactivateRawMode ()
 	writing standart treminal attributes back (standart attributes is !!global variable!!)
 }
 
-
+int GetWinSize (int* columns, int* rows)
+{
+	Getting terminal size in winsize structure using ioctl (Input/Output Control) function and changing variables that it gets.
+}
 
 //-----------------
+
+
+
+
+/*** Error handle ***/
+
+void Surrender (char* function);
+{
+	It clears entire screen and also puts the cursor to the top left corner of the screen.
+	Giving description of the error and exits with code 1.
+}

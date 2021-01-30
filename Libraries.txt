@@ -1,8 +1,57 @@
 /1/ <unistd.h>:
 
-- read (int filedescriptor, void *buf, size_t numbyte) from unistd.h, returning number of read bytes
+- read  (int filedescriptor, void *buf, size_t numbyte) from unistd.h, returning number of read bytes.
+		1) where we are reading from
+		2) where we are reading to
+		3) how many bytes we are reading
+
+- write (int filedescriptor, const void *buffer, size_t numbyte);
+		1) where we are writing to
+		2) what we are writing
+		3) how many bytes we are writing
+
+- STDIN_FILENO  is filedescriptor for standart input
+- STDOUT_FILENO is filedescriptor for standart output
 
 //-----------------
+
+
+
+/*/ Escape Sequences (ES)
+
+- \x1b is escape character and all ES should start with ot and '[' (\x1b[)
+
+- J sequences are "Erase in the display" sequences with 1 parameter (they should be before J but after escape character)
+	0 ("\x1b0J") is for clearing the screen from the cursor up to the end of the screen
+	1 ("\x1b1J") is for clearing the screen up to where the cursor is
+	2 ("\x1b2J") is for clearing the entire screen
+
+- H sequences are "Cursor position" sequences with 2 parameters (also before H), that should be separated with ';'
+	1) Raw number
+	2) Column number
+	ES "\x1b[12;40H" will put the cursor in the center of 80*24 screen
+
+- C sequences are "Cursos Forward" sequences with one parameter (how many spaces forward)
+
+- B sequences are "Cursos Down" sequences with one parameter (how many spaces down)
+
+- N sequences are "Device Status Report" sequences with one parameter
+	6 is needed to know cursor position
+
+- h sequences are "Set Mode" sequences to turn on some "Modes" (terminal features)
+	?25 is needed for cursor hiding/showing feature
+
+- l sequences are "Reset Mode" sequences to turn off some "Modes" (terminal features)
+	?25 is needed for cursor hiding/showing feature
+
+- K sequences are "Erase in line" sequences
+	2 erases the whole line
+	1 erases the part of the line to the left of the cursor
+	0 erases the part of the line to the right of the cursor (that's default)
+
+//-----------------
+
+
 
 
 /2/ <termios.h> (library for working with terminal):
@@ -65,6 +114,7 @@
 //-----------------
 
 
+
 /3/ <stdlib.h>
 
 - atexit (DisableRawMode). We use to register our disableRawMode() function to be called
@@ -77,12 +127,14 @@
 //-----------------
 
 
+
 /4/ <stdio.h>
 
 - perror () is function that check global errno variable and prints descriptive error message for it 
 	(and also it prints number of string, the code next to which caused error)
 
 //-----------------
+
 
 
 /5/ <ctype.h>
@@ -94,6 +146,7 @@
 //-----------------
 
 
+
 /6/ <errno.h>
 
 - errno is global variable, that changes by function in which the error occured
@@ -101,5 +154,16 @@
 - EAGAIN is possible value of errno. In Cygwin, when read() times out it returns -1 with an errno of
 	EAGAIN, instead of just returning 0 like it’s supposed to. To make it work in Cygwin, we won’t
 	treat EAGAIN as an error.
+
+//-----------------
+
+
+
+/7/ <sys/ioctl.h>
+
+- ioctl() is function that can fill winsize structure (when there is TIOCGWINSZ flag) with size of the terminal
+	TIOCGWINSZ stand for Terminal IOCtl (which itself stands for Input/Output Control) Get WINdow SiZe
+
+- struct winsize has fields ws_col and ws_row
 
 //-----------------
